@@ -1,5 +1,7 @@
 import React, {useState, useCallback, useEffect} from 'react'
 
+import { fetchMessages } from './API'
+
 const App = () =>  {
   //updating contents of the message input as user types.
   const [messageTextBox, setMessageTextBox] = useState('')
@@ -26,8 +28,14 @@ const App = () =>  {
   }, [listOfMessages, messageTextBox])
 
   useEffect(() => {
+    (async () => {
+      const listOfFetchedMessages = await fetchMessages()
+      console.log(listOfFetchedMessages)
+    })();
     console.log(listOfMessages.length)
   }, [listOfMessages])
+
+
 
   return (
     <div className="App"> 
