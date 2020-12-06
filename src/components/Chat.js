@@ -1,6 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react'
 
-import { fetchMessages } from '../API'
 
 const Chat = () =>  {
   //updating contents of the message input as user types.
@@ -35,7 +34,7 @@ const Chat = () =>  {
     console.log(listOfMessages.length)
   }, [listOfMessages])
 
-  
+
 
   return (
     <div className="chat-view"> 

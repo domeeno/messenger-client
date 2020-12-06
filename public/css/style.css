@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Lato")
 
+/* 
 :root {
 	--dark-color-a: #667aff;
 	--dark-color-b: #7386ff;
@@ -40,6 +41,7 @@ a {
 
 /* Chat Page */
 
+/*
 .chat-container {
 	max-width: 1100px;
 	background: #fff;
@@ -128,6 +130,8 @@ a {
 }
 
 /* Join Page */
+
+/*
 .join-container {
 	max-width: 500px;
 	margin: 80px auto;
@@ -188,3 +192,5 @@ a {
 		display: none;
 	}
 }
+
+*/

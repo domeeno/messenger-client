@@ -1,7 +1,7 @@
-import React, {useState, useCallback, useEffect} from 'react'
+import React from 'react'
 import Message from "./chat/Message"
 import ChooseChat from "./chat/ChooseChat"
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 const App = () =>  {
     return (
