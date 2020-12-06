@@ -18,10 +18,13 @@ function Message() {
         ignoreQueryPrefix: true
     });
 
-    socket.emit("joinRoom", { username, room });
+    useEffect(() => {
+        socket.emit("joinRoom", { username, room });
+    })
+    
 
     socket.on("message", message => {
-        console.log(message);
+        console.log("message", message);
 
         // outputMessage(message);
         // chatMessages.scrollTop = chatMessages.scrollHeight;
