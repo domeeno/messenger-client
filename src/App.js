@@ -1,5 +1,5 @@
 import React from 'react'
-import Message from "./chat/Message"
+import ChatView from "./chat/ChatView"
 import ChooseChat from "./chat/ChooseChat"
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const App = () =>  {
         <div>
             <Switch>
               <Route exact path="/" component={ChooseChat} />
-              <Route path="/chat" component={Message} />
+              <Route path="/chat" component={ChatView} />
             </Switch>
         </div>
       </BrowserRouter>

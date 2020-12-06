@@ -1,8 +1,8 @@
 import React, {useState, useCallback, useEffect} from 'react'
+import { Form, InputGroup, Button } from 'react-bootstrap'
 import socketIOClient from "socket.io-client";
 import Qs from "qs";
 import {useLocation} from "react-router-dom";
-import Sidebar from "./Sidebar"
 
 const ENDPOINT = "http://100.100.100.114:8080";
 const socket = socketIOClient(ENDPOINT, {transports: ['websocket']});
@@ -17,13 +17,15 @@ function Message() {
     const [listOfMessages, setListOfMessages] = useState([])
 
     console.log(location)
-    const { username, room } = Qs.parse(location.search, {
-        ignoreQueryPrefix: true
-    });
+    const token = localStorage.getItem("token")
+    const room = "5fcd2e8a79c4ed27cc3d318d"
+    // const { username, room } = Qs.parse(location.search, {
+    //     ignoreQueryPrefix: true
+    // });
 
     useEffect(() => {
-        socket.emit("joinRoom", { username, room });
-    }, [username, room])
+        socket.emit("joinRoom", { token, room });
+    }, [token, room])
 
 
     socket.on("message", message => {
@@ -86,40 +88,75 @@ function Message() {
     // }
 
     return (
-        <div className="chat-container">
-            <Sidebar />
-            <div className="chat-box-container">
-            <div className="chat-main">
-                <div className="chat-messages">
-                    <ul className="chat-message-container">
-                        {listOfMessages.map((message) => (
-                            <li key={message.id} > 
-                            <span className="time-display"> {message.time} </span>  
-                            <span className="username-display">{username}</span>
-                            <span className="separator"> : </span>
-                            <span className="message-display">{message.content}</span>
-                            </li>
-                        ))}
-                    </ul>
+            // <div className="chat-box-container">
+            // <div className="chat-main">
+            //     <div className="chat-messages">
+            //         <ul className="chat-message-container">
+            //             {listOfMessages.map((message) => (
+            //                 <li key={message.id} > 
+            //                 <span className="time-display"> {message.time} </span>  
+            //                 <span className="username-display">{username}</span>
+            //                 <span className="separator"> : </span>
+            //                 <span className="message-display">{message.content}</span>
+            //                 </li>
+            //             ))}
+            //         </ul>
+            //     </div>
+            // </div>
+            // <div className="chat-form-container">
+            //     <form id="chat-form" className="m-2" onSubmit={Submit}>
+            //     <input 
+            //         className="message-input-box"
+            //         onChange={onMessageInputChange}
+            //         id="msg"
+            //         type="text"
+            //         placeholder="Enter Message"
+            //         value={messageTextBox}
+            //         required
+            //         autoComplete="off"
+            //     />
+            //     <button className="send-button"> Send</button>
+            //     </form>
+            // </div>
+            // </div>
+            
+            <div className="chat-box-container d-flex flex-column flex-grow-1">
+                <div className="flex-grow-1 overflow-auto">
+                    <div className="h-100 d-flex flex-column align-items-start justify-content-end px-3">
+                         { listOfMessages.map((message) => {
+                                return(
+                                    <div className="my-1 d-flex flex-column">
+                                        <div key={message.id} > 
+                                            <span className="time-display"> {message.time} </span>  
+                                            <span className="username-display">PlaceHolder</span>
+                                            <span className="separator"> : </span>
+                                            <span className="message-display">{message.content}</span>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                         )}
+                    </div>
                 </div>
+                <Form onSubmit={Submit}>
+                    <Form.Group className="m-2">
+                        <InputGroup>
+                            <Form.Control 
+                            className="chat-input-box"
+                            onChange={onMessageInputChange}
+                            required 
+                            id="msg"
+                            placeholder="Enter Message"
+                            value={messageTextBox} 
+                            autoComplete="off"
+                            />
+                            <InputGroup.Append>
+                                <Button type="submit" className="chat-send-button">Send</Button>
+                            </InputGroup.Append>
+                        </InputGroup>
+                    </Form.Group>
+                </Form>
             </div>
-            <div className="chat-form-container">
-                <form id="chat-form" onSubmit={Submit}>
-                <input 
-                    className="message-input-box"
-                    onChange={onMessageInputChange}
-                    id="msg"
-                    type="text"
-                    placeholder="Enter Message"
-                    value={messageTextBox}
-                    required
-                    autoComplete="off"
-                />
-                <button className="send-button"> Send</button>
-                </form>
-            </div>
-            </div>
-        </div>
     )
 }
 
