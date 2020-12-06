@@ -35,7 +35,7 @@ const Chat = () =>  {
     console.log(listOfMessages.length)
   }, [listOfMessages])
 
-
+  
 
   return (
     <div className="chat-view"> 
