@@ -140,7 +140,7 @@ function Message() {
                 </div>
                 <Form onSubmit={Submit}>
                     <Form.Group className="m-2">
-                        <InputGroup>
+                        <InputGroup className="message-input-container">
                             <Form.Control 
                             className="chat-input-box"
                             onChange={onMessageInputChange}

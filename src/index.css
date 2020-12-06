@@ -98,8 +98,8 @@
 
 /* where input goes */
 
-.chat-form-container {
-    padding-left: 20px;
+.message-input-container {
+    padding-bottom: 20px;
 }
 
 .chat-input-box {

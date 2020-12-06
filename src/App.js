@@ -1,6 +1,6 @@
 import React from 'react'
-import ChatView from "./chat/ChatView"
-import ChooseChat from "./chat/ChooseChat"
+import ChatView from "./components/ChatView"
+import ChooseChat from "./components/ChooseChat"
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 const App = () =>  {
