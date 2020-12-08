@@ -2,10 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
 
-
 const ENDPOINT = 'http://100.100.100.114:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
-
 
 function Message() {
   const [messageTextBox, setMessageTextBox] = useState('');
@@ -15,33 +13,8 @@ function Message() {
   const to = '5fce0eeb9b34c9186afafadf';
 
   useEffect(() => {
-    socket.emit("joinRoom", { token, to });
-  }, [token, to])
-
-  useEffect(() => {
-    console.log("I was added by Diana")
-    
-    socket.on("message", ({username, text, time}) => {
-      setListOfMessages([
-        ...listOfMessages,
-        {
-          id: listOfMessages.length + 1,
-          content: text,
-          time: prettyDate2(time),
-          done: false,
-        }
-      ])
-    });
-  }, [])
-
-  useEffect(() => {
-    console.log(listOfMessages.length)
-  }, [listOfMessages])
-
-  const onMessageInputChange = useCallback((event) => {
-    // console.log(event.target.value);
-    setMessageTextBox(event.target.value);
-  }, []);
+    socket.emit('joinRoom', { token, to });
+  }, [token, to]);
 
   function prettyDate2(time) {
     const date = new Date(parseInt(time, 10));
@@ -49,15 +22,41 @@ function Message() {
     return localeSpecificTime.replace(/:\d+ /, ' ');
   }
 
+  useEffect(() => {
+    console.log('I was added by Diana');
+
+    socket.on('message', ({ text, time }) => {
+      setListOfMessages([
+        ...listOfMessages,
+        {
+          id: listOfMessages.length + 1,
+          content: text,
+          time: prettyDate2(time),
+          done: false,
+        },
+      ]);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    console.log(listOfMessages.length);
+  }, [listOfMessages]);
+
+  const onMessageInputChange = useCallback((event) => {
+    // console.log(event.target.value);
+    setMessageTextBox(event.target.value);
+  }, []);
+
   const Submit = useCallback((event) => {
     event.preventDefault();
-    
-    const msg = event.target.elements.msg.value
-    
-    const body =  {msg, token, to}
 
-    socket.emit("chatMessage", body);
-    console.log("I was sent by Dom")
+    const msg = event.target.elements.msg.value;
+
+    const body = { msg, token, to };
+
+    socket.emit('chatMessage', body);
+    console.log('I was sent by Dom');
     // socket.on("message", ({username, text, time}) => {
     //     setListOfMessages([
     //         ...listOfMessages,
@@ -70,8 +69,9 @@ function Message() {
     //     ])
     // })
 
-    setMessageTextBox("")
-  }, [listOfMessages, messageTextBox]) 
+    setMessageTextBox('');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listOfMessages, messageTextBox]);
 
   return (
     <div className="chat-box-container d-flex flex-column flex-grow-1">

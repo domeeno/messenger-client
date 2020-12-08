@@ -1,16 +1,16 @@
+/* eslint-disable no-console */
 import React, { useState, useCallback } from 'react';
 import socketIOClient from 'socket.io-client';
 
-const ENDPOINT = "http://192.168.0.133:8080";
+const ENDPOINT = 'http://192.168.0.133:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
-
 
 function Sidebar() {
   const [contactBox, setContactInputBox] = useState([]);
   const [contactList, setContactList] = useState([]);
 
-  const token = localStorage.getItem("token")
-  const to = "5fce0eeb9b34c9186afafadf"
+  const token = localStorage.getItem('token');
+  // const to = '5fce0eeb9b34c9186afafadf';
 
   const onContactInputChange = useCallback((event) => {
     // console.log(event.target.value);
@@ -22,8 +22,8 @@ function Sidebar() {
 
     const userToAdd = event.target.elements.userToAdd.value;
 
-    console.log(`${token} : ${userToAdd}`)
-    socket.emit("chatRequest", { token, userToAdd });
+    console.log(`${token} : ${userToAdd}`);
+    socket.emit('chatRequest', { token, userToAdd });
 
     setContactList([
       ...contactList,
@@ -35,6 +35,7 @@ function Sidebar() {
     ]);
 
     setContactInputBox('');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contactList, contactBox]);
 
   return (
@@ -52,21 +53,30 @@ function Sidebar() {
             required
             autoComplete="off"
           />
-          <button className="add-button"><i className="fas fa-paper-plane"></i> Add</button>
+          <button className="add-button" type="button">
+            <i className="fas fa-paper-plane" />
+            {' '}
+            Add
+          </button>
         </form>
       </div>
       <div id="contacts-box" className="contacts-list">
         <div className="user-contacts-container">
-          {contactList.map((contact) => {
-            return(
-                <div className="flex-column">
-                  <button 
-                  onClick={() => console.log(contact.id)}
-                  className="contact-button" 
-                  key={contact.id} > {contact.username} </button>
-                </div>
-              )}
-            )}
+          {contactList.map((contact) => (
+            <div className="flex-column">
+              <button
+                type="button"
+                onClick={() => console.log(contact.id)}
+                className="contact-button"
+                key={contact.id}
+              >
+                {' '}
+                {contact.username}
+                {' '}
+
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
