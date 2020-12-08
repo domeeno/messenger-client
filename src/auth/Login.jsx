@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
 import { useAuth } from './auth.context';
 import { login } from './auth.service';
 import './Auth.css';
 
-const Login = () => {
+const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const { setAuthToken } = useAuth();
 
-  const loginUser = (e) => {
+  const loginUser = async (e) => {
     e.preventDefault();
-    const user = login(email, password);
+    const user = await login(null, email, password);
     setAuthToken(user.authToken);
+
+    // eslint-disable-next-line react/prop-types
+    props.history.push('/');
   };
 
   return (
@@ -46,4 +48,4 @@ const Login = () => {
   );
 };
 
-export default withRouter(Login);
+export default Login;
