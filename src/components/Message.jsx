@@ -1,30 +1,45 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
-import { useLocation } from 'react-router-dom';
+
 
 const ENDPOINT = 'http://100.100.100.114:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
+
 function Message() {
-  const location = useLocation();
   const [messageTextBox, setMessageTextBox] = useState('');
   const [listOfMessages, setListOfMessages] = useState([]);
 
-  console.log(location);
   const token = localStorage.getItem('token');
-  const room = '5fcd2e8a79c4ed27cc3d318d';
+  const to = '5fce0eeb9b34c9186afafadf';
 
   useEffect(() => {
-    socket.emit('joinRoom', { token, room });
-  }, [token, room]);
+    socket.emit("joinRoom", { token, to });
+  }, [token, to])
 
-  socket.on('message', (message) => {
-    console.log('message', message);
-  });
+  useEffect(() => {
+    console.log("I was added by Diana")
+    
+    socket.on("message", ({username, text, time}) => {
+      setListOfMessages([
+        ...listOfMessages,
+        {
+          id: listOfMessages.length + 1,
+          content: text,
+          time: prettyDate2(time),
+          done: false,
+        }
+      ])
+    });
+  }, [])
+
+  useEffect(() => {
+    console.log(listOfMessages.length)
+  }, [listOfMessages])
 
   const onMessageInputChange = useCallback((event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setMessageTextBox(event.target.value);
   }, []);
 
@@ -36,23 +51,27 @@ function Message() {
 
   const Submit = useCallback((event) => {
     event.preventDefault();
+    
+    const msg = event.target.elements.msg.value
+    
+    const body =  {msg, token, to}
 
-    const msg = event.target.elements.msg.value;
+    socket.emit("chatMessage", body);
+    console.log("I was sent by Dom")
+    // socket.on("message", ({username, text, time}) => {
+    //     setListOfMessages([
+    //         ...listOfMessages,
+    //         {
+    //             id: listOfMessages.length + 1,
+    //             content: text,
+    //             time: prettyDate2(time),
+    //             done: false,
+    //         }
+    //     ])
+    // })
 
-    socket.emit('chatMessage', msg);
-
-    setListOfMessages([
-      ...listOfMessages,
-      {
-        id: listOfMessages.length + 1,
-        content: messageTextBox,
-        time: prettyDate2(Date.now()),
-        done: false,
-      },
-    ]);
-
-    setMessageTextBox('');
-  }, [listOfMessages, messageTextBox]);
+    setMessageTextBox("")
+  }, [listOfMessages, messageTextBox]) 
 
   return (
     <div className="chat-box-container d-flex flex-column flex-grow-1">
