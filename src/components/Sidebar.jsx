@@ -5,17 +5,34 @@ import socketIOClient from 'socket.io-client';
 const ENDPOINT = 'http://192.168.0.133:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
+const token = localStorage.getItem('token');
+
+const joinRoom = (recipientId, chatId) => {
+  socket.emit('disconnectMe', { chatId });
+  console.log(chatId);
+  socket.emit('joinRoom', { token, to: recipientId });
+};
+
 function Sidebar() {
   const [contactBox, setContactInputBox] = useState([]);
-  const [contactList, setContactList] = useState([]);
+  const [contactList, setContactList] = useState([{ id: '5fcfc0d9b02b5d27ff6ac14e', username: 'dgaponcic' },
+    { id: '5fcfedf5dac6fa0a188ec305', username: 'iulianaturcanu' }, { id: '5fcfee0bdac6fa0a188ec306', username: 'alexcalugari' }]);
+  // eslint-disable-next-line no-unused-vars
+  const [chatId, setChatId] = useState();
 
-  const token = localStorage.getItem('token');
+  // joinRoom(contactList[0].id);
+
   // const to = '5fce0eeb9b34c9186afafadf';
 
   const onContactInputChange = useCallback((event) => {
     // console.log(event.target.value);
     setContactInputBox(event.target.value);
   }, []);
+
+  socket.on('chatId', (newChatId) => {
+    console.log(newChatId);
+    setChatId(newChatId);
+  });
 
   const onContactInputSubmit = useCallback((event) => {
     event.preventDefault();
@@ -37,6 +54,11 @@ function Sidebar() {
     setContactInputBox('');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contactList, contactBox]);
+
+  const switchChat = useCallback((event) => {
+    console.log(event.target.dataset.id);
+    joinRoom(event.target.dataset.id, chatId);
+  }, [chatId]);
 
   return (
     <div className="chat-sidebar">
@@ -66,7 +88,8 @@ function Sidebar() {
             <div className="flex-column">
               <button
                 type="button"
-                onClick={() => console.log(contact.id)}
+                onClick={switchChat}
+                data-id={contact.id}
                 className="contact-button"
                 key={contact.id}
               >
