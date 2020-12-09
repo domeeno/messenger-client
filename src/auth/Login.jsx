@@ -21,28 +21,30 @@ const Login = ({ history }) => {
   return (
     <div className="auth-page">
       <div className="auth-wrapper">
-        <form onSubmit={loginUser}>
-          <h2 style={{ color: 'white' }}>Login</h2>
-          <input
-            required
-            type="email"
-            name="password"
-            id="password"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
-          <input
-            required
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
-          <button type="submit" className="btn btn-primary btn-block">Submit</button>
-        </form>
+        <div className="form-container">
+          <form onSubmit={loginUser}>
+            <h2 style={{ color: 'white' }}>Login</h2>
+            <input
+              required
+              type="email"
+              name="password"
+              id="password"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
+            <input
+              required
+              type="password"
+              name="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
+            <button type="submit" className="btn btn-primary btn-block">Submit</button>
+          </form>
+        </div>
       </div>
     </div>
   );
