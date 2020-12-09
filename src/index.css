@@ -151,3 +151,12 @@
     background-color: #1d2229;
     border-color: goldenrod;
 }
+
+
+/* PASSWORD STATE */
+
+.password-state {
+  height: 24px;
+  width: 24px;
+  pointer-events: none;
+}
