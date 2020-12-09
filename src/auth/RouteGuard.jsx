@@ -15,7 +15,7 @@ const RouteGuard = ({ component: Component, ...rest }) => {
       render={(props) => (isAuthenticated ? (
         <Component {...props} />
       ) : (
-        <Redirect to="/" />
+        <Redirect to="/login" />
       ))}
     />
   );
