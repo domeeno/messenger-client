@@ -19,7 +19,7 @@ const joinRoom = (recipientId, chatId) => {
 function ChatView() {
   // SIDEBAR HOOKS
   const [contactBox, setContactInputBox] = useState([]);
-  const [contactList, setContactList] = useState([{ id: '5fcfc0d9b02b5d27ff6ac14e', username: 'dgaponcic' },
+  const [contactList, setContactList] = useState([{ id: '5fce0ece9b34c9186afafade', username: 'dflocea' }, { id: '5fcfc0d9b02b5d27ff6ac14e', username: 'dgaponcic' },
     { id: '5fcfedf5dac6fa0a188ec305', username: 'iulianaturcanu' }, { id: '5fcfee0bdac6fa0a188ec306', username: 'alexcalugari' }]);
   // MESSAGE HOOKS
   const [messageTextBox, setMessageTextBox] = useState('');
@@ -28,6 +28,17 @@ function ChatView() {
   const [chatId, setChatId] = useState();
   // TEMPORARY LOGIN PASSWORD STATE
   const [passwordState, setPasswordState] = useState('https://www.iconsdb.com/icons/preview/red/warning-xxl.png');
+
+  useEffect(() => {
+    socket.emit('joinRoom', { token, to: contactList[0].id });
+  }, [contactList]);
+
+  useEffect(() => {
+    socket.on('chatId', (newChatId) => {
+      setChatId(newChatId);
+      console.log(chatId);
+    });
+  }, [chatId]);
 
   // SIDEBAR USECALLBACK ONEFFECT
   const onContactInputChange = useCallback((event) => {
@@ -56,13 +67,12 @@ function ChatView() {
 
   const switchChat = useCallback((event) => {
     console.log(event.target.dataset.id);
-    setChatId(event.target.dataset.id);
+    setListOfMessages([]);
     joinRoom(event.target.dataset.id, chatId);
   }, [chatId]);
 
   // MESSAGE HOOKS HANDLERS
   const messageHandler = (username, text, time) => {
-    console.log('I arrived here');
     setListOfMessages([
       ...listOfMessages,
       {
@@ -110,7 +120,7 @@ function ChatView() {
     const msg = event.target.elements.msg.value;
 
     // TODO send chatId with message
-    const body = { msg, token };
+    const body = { msg, token, chatId };
 
     socket.emit('chatMessage', body);
     console.log('I was sent by Dom');
