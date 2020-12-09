@@ -5,7 +5,7 @@ import React, {
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
 
-const ENDPOINT = 'http://192.168.0.133:8080';
+const ENDPOINT = 'http://100.100.100.114:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
 const token = localStorage.getItem('token');
