@@ -1,0 +1,36 @@
+.auth-page {
+  background-image: url("../static/back.png");
+  width: 100vw;
+  min-height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+}
+.auth-page .auth-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+  padding-bottom: 10px;
+}
+.auth-page .auth-wrapper form {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.auth-page .auth-wrapper form input {
+  padding: 10px 18px;
+  border: 2px solid white;
+  border-radius: 0;
+  margin-bottom: 5px;
+}
+.auth-page .auth-wrapper form button {
+  cursor: pointer;
+  border: 2px solid white;
+  padding: 5px 26px;
+}
+
+.form-container {
+  background-color: #1a1d21;
+}
