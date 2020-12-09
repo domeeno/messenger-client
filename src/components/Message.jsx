@@ -16,6 +16,9 @@ function Message() {
   const [listOfMessages, setListOfMessages] = useState([]);
   const [chatId, setChatId] = useState();
 
+  // Move to login page
+  const [passwordState, setPasswordState] = useState('https://www.iconsdb.com/icons/preview/red/warning-xxl.png');
+
   socket.on('chatId', (newChatId) => {
     console.log(newChatId);
     setChatId(newChatId);
@@ -53,6 +56,15 @@ function Message() {
   const onMessageInputChange = useCallback((event) => {
     // console.log(event.target.value);
     setMessageTextBox(event.target.value);
+
+    // Move to login page
+    if (event.target.value.length > 6 && event.target.value.length <= 10) {
+      setPasswordState('https://www.iconsdb.com/icons/preview/orange/warning-xxl.png');
+    } else if (event.target.value.length > 10) {
+      setPasswordState('https://www.iconsdb.com/icons/preview/caribbean-blue/ok-xxl.png');
+    } else if (event.target.value.length <= 6) {
+      setPasswordState('https://www.iconsdb.com/icons/preview/red/warning-xxl.png');
+    }
   }, []);
 
   const Submit = useCallback((event) => {
@@ -102,6 +114,10 @@ function Message() {
               value={messageTextBox}
               autoComplete="off"
             />
+            <InputGroup.Append>
+              <img className="m-2 password-state" src={passwordState} alt="bad-password" />
+            </InputGroup.Append>
+            {/* Move to login page */}
             <InputGroup.Append>
               <Button type="submit" className="chat-send-button">Send</Button>
             </InputGroup.Append>

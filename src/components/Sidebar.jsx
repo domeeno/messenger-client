@@ -17,12 +17,7 @@ function Sidebar() {
   const [contactBox, setContactInputBox] = useState([]);
   const [contactList, setContactList] = useState([{ id: '5fcfc0d9b02b5d27ff6ac14e', username: 'dgaponcic' },
     { id: '5fcfedf5dac6fa0a188ec305', username: 'iulianaturcanu' }, { id: '5fcfee0bdac6fa0a188ec306', username: 'alexcalugari' }]);
-  // eslint-disable-next-line no-unused-vars
   const [chatId, setChatId] = useState();
-
-  // joinRoom(contactList[0].id);
-
-  // const to = '5fce0eeb9b34c9186afafadf';
 
   const onContactInputChange = useCallback((event) => {
     // console.log(event.target.value);
