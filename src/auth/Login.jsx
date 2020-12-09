@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useAuth } from './auth.context';
 import { login } from './auth.service';
 import './Auth.css';
 
-const Login = (props) => {
+const Login = ({ history }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -14,8 +15,7 @@ const Login = (props) => {
     const user = await login(null, email, password);
     setAuthToken(user.authToken);
 
-    // eslint-disable-next-line react/prop-types
-    props.history.push('/');
+    history.push('/');
   };
 
   return (
@@ -46,6 +46,12 @@ const Login = (props) => {
       </div>
     </div>
   );
+};
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default Login;
