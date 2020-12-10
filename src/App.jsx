@@ -15,8 +15,6 @@ const App = () => {
     setAuthToken(token);
   };
 
-  // const { authToken, setAuthToken } = useAuth();
-
   return (
     <AuthContext.Provider value={{ authToken, setAuthToken: setToken }}>
       <BrowserRouter>
