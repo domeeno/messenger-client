@@ -5,18 +5,19 @@ import React, {
   useState, useEffect, useCallback,
 } from 'react';
 import { Button } from 'react-bootstrap';
-import socketIOClient from 'socket.io-client';
 import api from '../api/api.instance';
 
-const ENDPOINT = 'http://192.168.0.29:8080';
-const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
+const ENDPOINT = 'http://192.168.0.133:8080';
 const AUTH_BASE_URL = ENDPOINT;
 
 export const getMe = () => (
   api
     .get(`${AUTH_BASE_URL}/users/profile`, {
     })
-    .then((response) => response.data)
+    .then((response) => {
+      console.log(response.data);
+      return response.data;
+    })
 );
 
 function Profile() {
@@ -27,7 +28,7 @@ function Profile() {
 
   async function getInitials() {
     setUser(await getMe());
-    console.log(user);
+    console.log(`I actually do stuff${user}`);
   }
 
   useEffect(() => {
@@ -37,7 +38,8 @@ function Profile() {
 
   const onFirstNameInputChange = useCallback((event) => {
     setFirstName(event.target.value);
-  }, []);
+    console.log(user.firstName);
+  }, [user.firstName]);
 
   const onLastNameInputChange = useCallback((event) => {
     setLastName(event.target.value);
@@ -59,18 +61,18 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <div>
+      <div className="p-4 details-container">
         <img
           className="profile-image"
           src="https://aeealberta.org/wp-content/uploads/2018/10/profile.png"
           alt="Profile place holder"
         />
         <div id="username">
-          <div>
+          <h4>
             username:
             {' '}
             {user.username}
-          </div>
+          </h4>
         </div>
         <div id="email">
           <div>
@@ -82,18 +84,17 @@ function Profile() {
         <div>
           <div>
             first name:
-            {' '}
-            {user.firstname}
+            {user.firstName}
           </div>
-          <input onChange={onFirstNameInputChange}></input>
+          <input onChange={onFirstNameInputChange} className="contact-input-box"></input>
         </div>
         <div>
           <div>
             last name:
             {' '}
-            {user.lastname}
+            {user.lastName}
           </div>
-          <input onChange={onLastNameInputChange}></input>
+          <input onChange={onLastNameInputChange} className="contact-input-box"></input>
         </div>
         <div>
           <div>
@@ -101,7 +102,7 @@ function Profile() {
             {' '}
             {user.bio}
           </div>
-          <input onChange={onBioInputChange}></input>
+          <input onChange={onBioInputChange} className="contact-input-box"></input>
         </div>
         <Button type="submit" className="chat-send-button" onClick={updateUserRequest}>Save</Button>
       </div>

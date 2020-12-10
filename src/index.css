@@ -175,12 +175,18 @@
 }
 
 .profile-edits-container {
-    width: 20%;
+    width: 60%;
     background-color: #1d2229;
     height: auto;
     margin: 0 auto;
     padding: 10px;
     position: relative;
+}
+
+.details-container {
+  width: 30%;
+  background-color: #1d2229;
+  color: honeydew;
 }
 
 /*

@@ -6,7 +6,7 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
 import api from '../api/api.instance';
 
-const ENDPOINT = 'http://192.168.0.29:8080';
+const ENDPOINT = 'http://192.168.0.133:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
 const token = localStorage.getItem('authToken');
@@ -23,6 +23,19 @@ export const getMe = () => (
     })
     .then((response) => response.data)
 );
+
+export const sendAddContactRequest = (usernameToAdd) => {
+  api
+    .get(`${ENDPOINT}/users/${usernameToAdd}`, {
+    })
+    .then((response) => response.data);
+};
+
+async function getUserToBeAdded(userToAdd) {
+  const receivedUser = await sendAddContactRequest(userToAdd);
+  console.log(`I actually do stuff${userToAdd}`);
+  return receivedUser;
+}
 
 function ChatView() {
   // SIDEBAR HOOKS
@@ -68,20 +81,21 @@ function ChatView() {
 
     const userToAdd = event.target.elements.userToAdd.value;
 
-    console.log(`${token} : ${userToAdd}`);
-    socket.emit('chatRequest', { token, userToAdd });
+    const receivedUser = getUserToBeAdded(userToAdd);
+
+    console.log(`Ohoooo${receivedUser.username}`);
 
     setContactList([
       ...contactList,
       {
-        id: contactList.length + 1,
-        username: contactBox,
+        id: receivedUser.id,
+        username: receivedUser.username,
         done: false,
       },
     ]);
 
     setContactInputBox('');
-  }, [contactList, contactBox]);
+  }, [contactList]);
 
   const switchChat = useCallback((event) => {
     console.log(event.target.dataset.id);
@@ -164,7 +178,7 @@ function ChatView() {
               required
               autoComplete="off"
             />
-            <button className="add-button" type="button">
+            <button className="add-button" type="submit">
               <i className="fas fa-paper-plane" />
               {' '}
               Add
@@ -185,7 +199,6 @@ function ChatView() {
                   {' '}
                   {contact.username}
                   {' '}
-
                 </button>
               </div>
             ))}
