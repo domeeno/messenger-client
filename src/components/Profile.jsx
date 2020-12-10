@@ -21,25 +21,22 @@ export const getMe = () => (
 );
 
 function Profile() {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState({});
   const [firstNameField, setFirstName] = useState('');
   const [lastNameField, setLastName] = useState('');
   const [bioField, setBio] = useState('');
 
-  async function getInitials() {
-    setUser(await getMe());
-    console.log(`I actually do stuff${user}`);
-  }
-
   useEffect(() => {
-    getInitials();
+    getMe().then((response) => {
+      console.log(response);
+      return setUser(response.user);
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onFirstNameInputChange = useCallback((event) => {
     setFirstName(event.target.value);
-    console.log(user.firstName);
-  }, [user.firstName]);
+  }, []);
 
   const onLastNameInputChange = useCallback((event) => {
     setLastName(event.target.value);
@@ -61,6 +58,7 @@ function Profile() {
 
   return (
     <div className="profile-container">
+      <div>{user.username}</div>
       <div className="p-4 details-container">
         <img
           className="profile-image"
@@ -86,7 +84,7 @@ function Profile() {
             first name:
             {user.firstName}
           </div>
-          <input onChange={onFirstNameInputChange} className="contact-input-box"></input>
+          <input onChange={onFirstNameInputChange} defaultValue={user.firstName} className="contact-input-box"></input>
         </div>
         <div>
           <div>
@@ -94,7 +92,7 @@ function Profile() {
             {' '}
             {user.lastName}
           </div>
-          <input onChange={onLastNameInputChange} className="contact-input-box"></input>
+          <input onChange={onLastNameInputChange} defaultValue={user.lastName} className="contact-input-box"></input>
         </div>
         <div>
           <div>
@@ -102,7 +100,7 @@ function Profile() {
             {' '}
             {user.bio}
           </div>
-          <input onChange={onBioInputChange} className="contact-input-box"></input>
+          <input onChange={onBioInputChange} defaultValue={user.bio} className="contact-input-box"></input>
         </div>
         <Button type="submit" className="chat-send-button" onClick={updateUserRequest}>Save</Button>
       </div>

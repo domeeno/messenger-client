@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb", "airbnb/hooks"],
+  "extends": ["airbnb", "airbnb/hooks"], "rules": {"linebreak-style": "off"},
   "globals": {
     "localStorage": true,
     "fetch": true,

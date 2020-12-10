@@ -1,4 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
+import moment from 'moment';
 import React, {
   useState, useCallback, useEffect,
 } from 'react';
@@ -17,41 +21,61 @@ const joinRoom = (recipientId, chatId) => {
   socket.emit('joinRoom', { token, to: recipientId });
 };
 
-export const getMe = () => (
+const getMe = () => (
   api
     .get(`${ENDPOINT}/users/username`, {
     })
     .then((response) => response.data)
 );
 
-export const sendAddContactRequest = (usernameToAdd) => {
+const sendAddContactRequest = (usernameToAdd) => {
   api
     .get(`${ENDPOINT}/users/${usernameToAdd}`, {
     })
     .then((response) => response.data);
 };
 
-async function getUserToBeAdded(userToAdd) {
-  const receivedUser = await sendAddContactRequest(userToAdd);
+const getMessageListFromChat = (chatId) => (
+  api.get(`${ENDPOINT}/chats/${chatId}`, {}).then((response) => {
+    console.log(response.data);
+    return response.data;
+  })
+);
+
+function getUserToBeAdded(userToAdd) {
+  const receivedUser = sendAddContactRequest(userToAdd);
   console.log(`I actually do stuff${userToAdd}`);
   return receivedUser;
+}
+
+async function loadMessages(chatId) {
+  const newMessageList = await getMessageListFromChat(chatId);
+  return newMessageList;
+}
+
+function prettifyTime(time) {
+  // eslint-disable-next-line radix
+  const date = new Date(parseInt(time));
+  const localeSpecificTime = date.toLocaleTimeString();
+  return localeSpecificTime.replace(/:\d+ /, ' ');
 }
 
 function ChatView() {
   // SIDEBAR HOOKS
   const [contactBox, setContactInputBox] = useState([]);
   const [username, setUsername] = useState();
-  const [contactList, setContactList] = useState([]);
+  const [messageToBeloaded, setMessageToBeLoaded] = useState([]);
+  const [contactList, setContactList] = useState([{ id: '5fd260f82c653e5154407f54', username: 'vasile_bigdaddy_tronciu' }, { id: '5fd261612c653e5154407f55', username: 'alex' },
+    { id: '5fd15f131051df48e6c68f6f', username: 'dgaponcic' }]);
   // MESSAGE HOOKS
   const [messageTextBox, setMessageTextBox] = useState('');
   const [listOfMessages, setListOfMessages] = useState([]);
   // GENERAL HOOKS
   const [chatId, setChatId] = useState();
-  // TEMPORARY LOGIN PASSWORD STATE
+  const [didMount, setDidMount] = useState(false);
 
   async function getInitials() {
     setUsername((await getMe()).username);
-    console.log(username);
   }
 
   useEffect(() => {
@@ -59,17 +83,31 @@ function ChatView() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   if (contactList.length !== 0) {
-  //     socket.emit('joinRoom', { token, to: contactList[0].id });
-  //   }
-  // }, [contactList]);
+  useEffect(() => {
+    socket.emit('joinRoom', { token, to: contactList[0].id });
+  }, [contactList, chatId]);
 
   useEffect(() => {
-    socket.on('chatId', (newChatId) => {
+    setDidMount(true);
+    console.log('hey Alex :)');
+    socket.on('chatId', async (newChatId) => {
       setChatId(newChatId);
+      const messages = Array.from(await loadMessages(newChatId)).map((message) => ({
+        id: message._id,
+        user: message.from.username,
+        content: message.content,
+        time: moment(message.timeSent).format('hh:mm a'),
+        done: false,
+      }));
+      setListOfMessages([...listOfMessages, ...messages]);
     });
-  }, [chatId]);
+  }, []);
+
+  // useEffect(() => {
+
+  //   // }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [messageToBeloaded]);
 
   // SIDEBAR USECALLBACK ONEFFECT
   const onContactInputChange = useCallback((event) => {
@@ -101,14 +139,8 @@ function ChatView() {
     console.log(event.target.dataset.id);
     setListOfMessages([]);
     joinRoom(event.target.dataset.id, chatId);
+    const loadedMessages = loadMessages(chatId);
   }, [chatId]);
-
-  function prettifyTime(time) {
-    // eslint-disable-next-line radix
-    const date = new Date(parseInt(time));
-    const localeSpecificTime = date.toLocaleTimeString();
-    return localeSpecificTime.replace(/:\d+ /, ' ');
-  }
 
   // MESSAGE HOOKS HANDLERS
   const messageHandler = (user, text, time) => {
@@ -217,7 +249,7 @@ function ChatView() {
                     {message.time}
                     {' '}
                   </span>
-                  <span className="username-display">{message.username}</span>
+                  <span className="username-display">{message.user}</span>
                   <span className="separator"> : </span>
                   <span className="message-display">{message.content}</span>
                 </div>
