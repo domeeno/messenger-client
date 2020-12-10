@@ -103,6 +103,7 @@ function Profile() {
           <input onChange={onBioInputChange} defaultValue={user.bio} className="contact-input-box"></input>
         </div>
         <Button type="submit" className="chat-send-button" onClick={updateUserRequest}>Save</Button>
+        <a className="chat-send-button" href="/change-password">Change Password</a>
       </div>
     </div>
   );
