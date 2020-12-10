@@ -160,3 +160,36 @@
   width: 24px;
   pointer-events: none;
 }
+
+.profile-container {
+  background-image: url("./static/back.png");
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+}
+
+.profile-edits-container {
+    width: 20%;
+    background-color: #1d2229;
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+}
+
+/*
+.edit-fields {
+  width: 284px;
+  height: 290px;
+  position:absolute;
+  top: 50%;
+  left:50%;
+  margin-top: -147px;
+  margin-left: -144px;
+} */

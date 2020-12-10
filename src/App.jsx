@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ChatView from './components/ChatView';
 import Register from './auth/Register';
 import Login from './auth/Login';
-import ChooseChat from './components/ChooseChat';
+import Profile from './components/Profile';
 import { AuthContext } from './auth/auth.context';
 import RouteGuard from './auth/RouteGuard';
 
@@ -24,8 +24,8 @@ const App = () => {
           <Switch>
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
-            <RouteGuard exact path="/" component={ChooseChat} />
-            <RouteGuard path="/chat" component={ChatView} />
+            <Route path="/profile" component={Profile} />
+            <RouteGuard exact path="/" component={ChatView} />
           </Switch>
         </div>
       </BrowserRouter>

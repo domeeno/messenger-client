@@ -4,11 +4,12 @@ import React, {
 } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
+import api from '../api/api.instance';
 
-const ENDPOINT = 'http://100.100.100.114:8080';
+const ENDPOINT = 'http://192.168.0.29:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('authToken');
 
 const joinRoom = (recipientId, chatId) => {
   socket.emit('disconnectMe', { chatId });
@@ -16,27 +17,44 @@ const joinRoom = (recipientId, chatId) => {
   socket.emit('joinRoom', { token, to: recipientId });
 };
 
+export const getMe = () => (
+  api
+    .get(`${ENDPOINT}/users/username`, {
+    })
+    .then((response) => response.data)
+);
+
 function ChatView() {
   // SIDEBAR HOOKS
   const [contactBox, setContactInputBox] = useState([]);
-  const [contactList, setContactList] = useState([{ id: '5fce0ece9b34c9186afafade', username: 'dflocea' }, { id: '5fcfc0d9b02b5d27ff6ac14e', username: 'dgaponcic' },
-    { id: '5fcfedf5dac6fa0a188ec305', username: 'iulianaturcanu' }, { id: '5fcfee0bdac6fa0a188ec306', username: 'alexcalugari' }]);
+  const [username, setUsername] = useState();
+  const [contactList, setContactList] = useState([]);
   // MESSAGE HOOKS
   const [messageTextBox, setMessageTextBox] = useState('');
   const [listOfMessages, setListOfMessages] = useState([]);
   // GENERAL HOOKS
   const [chatId, setChatId] = useState();
   // TEMPORARY LOGIN PASSWORD STATE
-  const [passwordState, setPasswordState] = useState('https://www.iconsdb.com/icons/preview/red/warning-xxl.png');
+
+  async function getInitials() {
+    setUsername((await getMe()).username);
+    console.log(username);
+  }
 
   useEffect(() => {
-    socket.emit('joinRoom', { token, to: contactList[0].id });
-  }, [contactList]);
+    getInitials();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // useEffect(() => {
+  //   if (contactList.length !== 0) {
+  //     socket.emit('joinRoom', { token, to: contactList[0].id });
+  //   }
+  // }, [contactList]);
 
   useEffect(() => {
     socket.on('chatId', (newChatId) => {
       setChatId(newChatId);
-      console.log(chatId);
     });
   }, [chatId]);
 
@@ -71,14 +89,22 @@ function ChatView() {
     joinRoom(event.target.dataset.id, chatId);
   }, [chatId]);
 
+  function prettifyTime(time) {
+    // eslint-disable-next-line radix
+    const date = new Date(parseInt(time));
+    const localeSpecificTime = date.toLocaleTimeString();
+    return localeSpecificTime.replace(/:\d+ /, ' ');
+  }
+
   // MESSAGE HOOKS HANDLERS
-  const messageHandler = (username, text, time) => {
+  const messageHandler = (user, text, time) => {
     setListOfMessages([
       ...listOfMessages,
       {
         id: listOfMessages.length + 1,
+        username: user,
         content: text,
-        time,
+        time: prettifyTime(time),
         done: false,
       },
     ]);
@@ -103,15 +129,6 @@ function ChatView() {
   const onMessageInputChange = useCallback((event) => {
     // console.log(event.target.value);
     setMessageTextBox(event.target.value);
-
-    // Move to login page
-    if (event.target.value.length > 6 && event.target.value.length <= 10) {
-      setPasswordState('https://www.iconsdb.com/icons/preview/orange/warning-xxl.png');
-    } else if (event.target.value.length > 10) {
-      setPasswordState('https://www.iconsdb.com/icons/preview/caribbean-blue/ok-xxl.png');
-    } else if (event.target.value.length <= 6) {
-      setPasswordState('https://www.iconsdb.com/icons/preview/red/warning-xxl.png');
-    }
   }, []);
 
   const Submit = useCallback((event) => {
@@ -123,7 +140,7 @@ function ChatView() {
     const body = { msg, token, chatId };
 
     socket.emit('chatMessage', body);
-    console.log('I was sent by Dom');
+    console.log(`I was sent by Dom${chatId}`);
 
     setMessageTextBox('');
 
@@ -134,7 +151,7 @@ function ChatView() {
     <div className="chat-container d-flex">
       {/* SIDE */}
       <div className="chat-sidebar">
-        <h3 className="contacts-header">PlaceHolder</h3>
+        <a href="/profile" className="contacts-header">{username}</a>
         <div id="add-contacts" className="add-contact-form">
           <form id="chat-form" onSubmit={onContactInputSubmit}>
             <input
@@ -187,7 +204,7 @@ function ChatView() {
                     {message.time}
                     {' '}
                   </span>
-                  <span className="username-display">PlaceHolder</span>
+                  <span className="username-display">{message.username}</span>
                   <span className="separator"> : </span>
                   <span className="message-display">{message.content}</span>
                 </div>
@@ -207,10 +224,6 @@ function ChatView() {
                 value={messageTextBox}
                 autoComplete="off"
               />
-              <InputGroup.Append>
-                <img className="m-2 password-state" src={passwordState} alt="bad-password" />
-              </InputGroup.Append>
-              {/* Move to login page */}
               <InputGroup.Append>
                 <Button type="submit" className="chat-send-button">Send</Button>
               </InputGroup.Append>
