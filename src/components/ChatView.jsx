@@ -17,7 +17,6 @@ const token = localStorage.getItem('authToken');
 
 const joinRoom = (recipientId, chatId) => {
   socket.emit('disconnectMe', { chatId });
-  console.log(chatId);
   socket.emit('joinRoom', { token, to: recipientId });
 };
 
@@ -72,7 +71,6 @@ function ChatView() {
   const [listOfMessages, setListOfMessages] = useState([]);
   // GENERAL HOOKS
   const [chatId, setChatId] = useState();
-  const [didMount, setDidMount] = useState(false);
 
   async function getInitials() {
     setUsername((await getMe()).username);
@@ -84,12 +82,6 @@ function ChatView() {
   }, []);
 
   useEffect(() => {
-    socket.emit('joinRoom', { token, to: contactList[0].id });
-  }, [contactList, chatId]);
-
-  useEffect(() => {
-    setDidMount(true);
-    console.log('hey Alex :)');
     socket.on('chatId', async (newChatId) => {
       setChatId(newChatId);
       const messages = Array.from(await loadMessages(newChatId)).map((message) => ({
@@ -102,12 +94,6 @@ function ChatView() {
       setListOfMessages([...listOfMessages, ...messages]);
     });
   }, []);
-
-  // useEffect(() => {
-
-  //   // }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [messageToBeloaded]);
 
   // SIDEBAR USECALLBACK ONEFFECT
   const onContactInputChange = useCallback((event) => {
@@ -135,22 +121,23 @@ function ChatView() {
     setContactInputBox('');
   }, [contactList]);
 
-  const switchChat = useCallback((event) => {
+  const switchChat = useCallback(async (event) => {
     console.log(event.target.dataset.id);
     setListOfMessages([]);
     joinRoom(event.target.dataset.id, chatId);
-    const loadedMessages = loadMessages(chatId);
+    setChatId(chatId);
   }, [chatId]);
 
   // MESSAGE HOOKS HANDLERS
   const messageHandler = (user, text, time) => {
+    console.log(`the user: ${user}`);
     setListOfMessages([
       ...listOfMessages,
       {
         id: listOfMessages.length + 1,
-        username: user,
+        user,
         content: text,
-        time: prettifyTime(time),
+        time: moment(time).format('hh:mm a'),
         done: false,
       },
     ]);
@@ -160,7 +147,7 @@ function ChatView() {
 
   useEffect(() => {
     const handler = (message) => {
-      console.log(`message${message.username} ${message.text} ${message.time}`);
+      console.log(`message ${message.username} ${message.text} ${message.time}`);
       messageHandler(message.username, message.text, message.time);
     };
 

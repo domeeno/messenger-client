@@ -4,6 +4,7 @@ import ChatView from './components/ChatView';
 import Register from './auth/Register';
 import Login from './auth/Login';
 import Profile from './components/Profile';
+import ChangePassword from './auth/ChangePassword';
 import { AuthContext } from './auth/auth.context';
 import RouteGuard from './auth/RouteGuard';
 
@@ -21,6 +22,7 @@ const App = () => {
         <div>
           <Switch>
             <Route path="/register" component={Register} />
+            <Route path="/change-password" component={ChangePassword} />
             <Route path="/login" component={Login} />
             <Route path="/profile" component={Profile} />
             <RouteGuard exact path="/" component={ChatView} />

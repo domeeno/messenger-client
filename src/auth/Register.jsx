@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import Popover from 'react-bootstrap/Popover';
 import PropTypes from 'prop-types';
 import { CheckCircleFill } from 'react-bootstrap-icons';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { useAuth } from './auth.context';
 import { register } from './auth.service';
 import './Auth.css';
-import validatePassword from './PasswordValidator';
+import validatePassword, { popover } from './PasswordValidator';
 
 const Register = ({ history }) => {
   const [formData, setFormData] = useState({
@@ -19,6 +18,8 @@ const Register = ({ history }) => {
 
   const { setAuthToken } = useAuth();
 
+  const passwordIsValid = validatePassword(password);
+
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const registerUser = async (e) => {
@@ -28,40 +29,6 @@ const Register = ({ history }) => {
 
     history.push('/');
   };
-
-  const passwordIsValid = validatePassword(password);
-
-  const popover = (
-    <Popover>
-      <Popover.Title as="h3" className="text-center">
-        Password Criteria
-        {' '}
-      </Popover.Title>
-      <Popover.Content>
-        <p className="my-0">12 characters and must include:</p>
-        <p className="my-0">
-          <i className="fas fa-caret-right mr-1" />
-          {' '}
-          UPPER case letters
-        </p>
-        <p className="my-0">
-          <i className="fas fa-caret-right mr-1" />
-          {' '}
-          lower case letters
-        </p>
-        <p className="my-0">
-          <i className="fas fa-caret-right mr-1" />
-          {' '}
-          at least one number
-        </p>
-        <p className="my-0">
-          <i className="fas fa-caret-right mr-1" />
-          {' '}
-          at least one symbol
-        </p>
-      </Popover.Content>
-    </Popover>
-  );
 
   return (
     <div className="auth-page">

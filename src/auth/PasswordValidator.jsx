@@ -1,6 +1,6 @@
 import Validator from 'password-validator';
-// import React from 'react';
-// import { propTypes } from 'react-bootstrap/esm/Image';
+import Popover from 'react-bootstrap/Popover';
+import React from 'react';
 
 const schema = new Validator();
 schema.is().min(12).is().max(100)
@@ -19,37 +19,37 @@ const validatePassword = (password) => {
   );
   return schema.validate(password);
 };
-// const PasswordValidator = () => {
-//   (
-//     <div>
-//       <ol>
-//         <li>
-//           Uppercase letter,
-//           {' '}
-//         </li>
-//         <li>
-//           Lowercase letter,
-//           {' '}
-//         </li>
-//         <li>
-//           Numbers (0-9),
-//           {' '}
-//         </li>
-//         <li>
-//           Special Characters,
-//           {' '}
-//         </li>
-//         <li>
-//           At least 12 characters
-//         </li>
-//       </ol>
-//     </div>
-//   );
-//   return null;
-// };
 
-// PasswordValidator.propTypes = {
-//   password: propTypes.string.isRequired,
-// };
+export const popover = (
+  <Popover>
+    <Popover.Title as="h3" className="text-center">
+      Password Criteria
+      {' '}
+    </Popover.Title>
+    <Popover.Content>
+      <p className="my-0">12 characters and must include:</p>
+      <p className="my-0">
+        <i className="fas fa-caret-right mr-1" />
+        {' '}
+        UPPER case letters
+      </p>
+      <p className="my-0">
+        <i className="fas fa-caret-right mr-1" />
+        {' '}
+        lower case letters
+      </p>
+      <p className="my-0">
+        <i className="fas fa-caret-right mr-1" />
+        {' '}
+        at least one number
+      </p>
+      <p className="my-0">
+        <i className="fas fa-caret-right mr-1" />
+        {' '}
+        at least one symbol
+      </p>
+    </Popover.Content>
+  </Popover>
+);
 
 export default validatePassword;
