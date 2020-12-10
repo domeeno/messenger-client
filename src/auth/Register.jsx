@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Popover from 'react-bootstrap/Popover';
 import PropTypes from 'prop-types';
+import { CheckCircleFill } from 'react-bootstrap-icons';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { useAuth } from './auth.context';
 import { register } from './auth.service';
@@ -65,7 +66,7 @@ const Register = ({ history }) => {
   return (
     <div className="auth-page">
       <div className="auth-wrapper">
-        <form onSubmit={registerUser}>
+        <form onSubmit={registerUser} style={{ width: '208px' }}>
           <h2 style={{ color: 'white' }}>Register</h2>
           <input
             type="text"
@@ -95,6 +96,12 @@ const Register = ({ history }) => {
               placeholder="Password"
             />
           </OverlayTrigger>
+          {passwordIsValid && (
+          <div style={{ color: 'green' }}>
+            <CheckCircleFill style={{ marginRight: '4px', marginBottom: '4px' }} color="green" />
+            Nice password
+          </div>
+          )}
           <button type="submit" disabled={!passwordIsValid} className="btn btn-primary btn-block">Submit</button>
         </form>
       </div>
