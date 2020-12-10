@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import { CheckCircleFill, EyeFill } from 'react-bootstrap-icons';
+import { CheckCircleFill } from 'react-bootstrap-icons';
 import validatePassword, { popover } from './PasswordValidator';
 import { useAuth } from './auth.context';
-import { login } from './auth.service';
+import { changePassword } from '../api/user.service';
 import './Auth.css';
 
 const Login = ({ history }) => {
@@ -20,14 +20,14 @@ const Login = ({ history }) => {
 
   const passwordIsValid = validatePassword(newPassword);
 
-  const eye = <EyeFill icon={EyeFill} />;
+  // const eye = <EyeFill icon={EyeFill} />;
 
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const changePassword = async (e) => {
+  const resetPassword = async (e) => {
     e.preventDefault();
-    const user = await login(null, newPassword, oldPassword);
-    setAuthToken(user.authToken);
+    await changePassword(oldPassword, newPassword);
+    setAuthToken('');
 
     history.push('/login');
   };
@@ -36,7 +36,7 @@ const Login = ({ history }) => {
     <div className="auth-page">
       <div className="auth-wrapper">
         <div className="form-container">
-          <form onSubmit={changePassword}>
+          <form onSubmit={resetPassword}>
             <h2 style={{ color: 'white' }}>Change password</h2>
             <input
               required
@@ -57,7 +57,7 @@ const Login = ({ history }) => {
                 onChange={onChange}
                 placeholder="New Password"
               />
-              <i>{eye}</i>
+              {/* <i>{eye}</i> */}
             </OverlayTrigger>
             {passwordIsValid && (
             <div style={{ color: 'green' }}>
