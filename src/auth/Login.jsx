@@ -44,6 +44,7 @@ const Login = ({ history }) => {
             />
             <button type="submit" className="btn btn-primary btn-block">Submit</button>
             <a href="change-password">Forgot Password</a>
+            <a href="/register">Dont have an account? Register here</a>
           </form>
         </div>
       </div>

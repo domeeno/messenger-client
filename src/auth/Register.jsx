@@ -70,6 +70,7 @@ const Register = ({ history }) => {
           </div>
           )}
           <button type="submit" disabled={!passwordIsValid} className="btn btn-primary btn-block">Submit</button>
+          <a href="/register">Have an account? Login here</a>
         </form>
       </div>
     </div>

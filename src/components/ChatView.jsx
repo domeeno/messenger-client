@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 import moment from 'moment';
 import React, {
   useState, useCallback, useEffect,
@@ -10,7 +9,7 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
 import api from '../api/api.instance';
 
-const ENDPOINT = 'http://192.168.0.133:8080';
+const ENDPOINT = 'http://100.100.100.114:8080';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
 const token = localStorage.getItem('authToken');
@@ -35,10 +34,8 @@ const sendAddContactRequest = (usernameToAdd) => {
 };
 
 const getMessageListFromChat = (chatId) => (
-  api.get(`${ENDPOINT}/chats/${chatId}`, {}).then((response) => {
-    console.log(response.data);
-    return response.data;
-  })
+  api.get(`${ENDPOINT}/chats/${chatId}`, {}).then((response) => response.data)
+
 );
 
 // const getContactList = () => (
@@ -50,7 +47,6 @@ const getMessageListFromChat = (chatId) => (
 
 function getUserToBeAdded(userToAdd) {
   const receivedUser = sendAddContactRequest(userToAdd);
-  console.log(`I actually do stuff${userToAdd}`);
   return receivedUser;
 }
 
@@ -75,9 +71,8 @@ function ChatView() {
   // SIDEBAR HOOKS
   const [contactBox, setContactInputBox] = useState([]);
   const [username, setUsername] = useState();
-  const [messageToBeloaded, setMessageToBeLoaded] = useState([]);
-  const [contactList, setContactList] = useState([{ id: '5fd260f82c653e5154407f54', username: 'vasile_bigdaddy_tronciu' }, { id: '5fd261612c653e5154407f55', username: 'alex' },
-    { id: '5fd15f131051df48e6c68f6f', username: 'dgaponcic' }]);
+  const [contactList, setContactList] = useState([{ id: '5fd39bfe1d602517326143ed', username: 'momo' },
+    { id: '5fd39c5e58c64b18909f7411', username: 'dianusca' }, { id: '5fd39ca758c64b18909f7412', username: 'holly_molly' }]);
   // MESSAGE HOOKS
   const [messageTextBox, setMessageTextBox] = useState('');
   const [listOfMessages, setListOfMessages] = useState([]);
@@ -120,7 +115,7 @@ function ChatView() {
 
   // SIDEBAR USECALLBACK ONEFFECT
   const onContactInputChange = useCallback((event) => {
-    setContactInputBox(event.target.value);
+    setContactInputBox(String(event.target.value));
   }, []);
 
   const onContactInputSubmit = useCallback((event) => {
@@ -129,8 +124,6 @@ function ChatView() {
     const userToAdd = String(event.target.elements.userToAdd.value);
 
     const receivedUser = getUserToBeAdded(userToAdd);
-
-    console.log(`Ohoooo${receivedUser.username}`);
 
     setContactList([
       ...contactList,
@@ -145,7 +138,6 @@ function ChatView() {
   }, [contactList]);
 
   const switchChat = useCallback(async (event) => {
-    console.log(event.target.dataset.id);
     setListOfMessages([]);
     joinRoom(event.target.dataset.id, chatId);
     setChatId(chatId);
@@ -153,7 +145,6 @@ function ChatView() {
 
   // MESSAGE HOOKS HANDLERS
   const messageHandler = (user, text, time) => {
-    console.log(`the user: ${user}`);
     setListOfMessages([
       ...listOfMessages,
       {
@@ -164,13 +155,10 @@ function ChatView() {
         done: false,
       },
     ]);
-
-    console.log(listOfMessages.length);
   };
 
   useEffect(() => {
     const handler = (message) => {
-      console.log(`message ${message.username} ${message.text} ${message.time}`);
       messageHandler(message.username, message.text, message.time);
     };
 
@@ -184,7 +172,7 @@ function ChatView() {
 
   const onMessageInputChange = useCallback((event) => {
     // console.log(event.target.value);
-    setMessageTextBox(event.target.value);
+    setMessageTextBox(String(event.target.value));
   }, []);
 
   const Submit = useCallback((event) => {
@@ -196,7 +184,6 @@ function ChatView() {
     const body = { msg, token, chatId };
 
     socket.emit('chatMessage', body);
-    console.log(`I was sent by Dom${chatId}`);
 
     setMessageTextBox('');
 
