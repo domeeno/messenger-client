@@ -7,7 +7,7 @@ import React, {
 import { Button } from 'react-bootstrap';
 import api from '../api/api.instance';
 
-const ENDPOINT = 'http://localhost:8080';
+const ENDPOINT = 'http://7fcf522f3a08.ngrok.io';
 const AUTH_BASE_URL = ENDPOINT;
 
 export const getMe = () => (
