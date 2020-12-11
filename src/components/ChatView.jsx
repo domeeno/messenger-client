@@ -41,12 +41,12 @@ const getMessageListFromChat = (chatId) => (
   })
 );
 
-const getContactList = () => (
-  api.get(`${ENDPOINT}/chats/`, {}).then((response) => {
-    console.log(response.data);
-    return response.data;
-  })
-);
+// const getContactList = () => (
+//   api.get(`${ENDPOINT}/chats/`, {}).then((response) => {
+//     console.log(response.data);
+//     return response.data;
+//   })
+// );
 
 function getUserToBeAdded(userToAdd) {
   const receivedUser = sendAddContactRequest(userToAdd);
@@ -59,10 +59,10 @@ async function loadMessages(chatId) {
   return newMessageList;
 }
 
-async function loadContacts() {
-  const loadedContactList = await getContactList();
-  return loadedContactList;
-}
+// async function loadContacts() {
+//   const loadedContactList = await getContactList();
+//   return loadedContactList;
+// }
 
 function prettifyTime(time) {
   // eslint-disable-next-line radix
@@ -107,16 +107,16 @@ function ChatView() {
     });
   }, []);
 
-  useEffect(() => {
-    socket.on('contacts', async () => {
-      const contacts = Array.from(await loadContacts()).map((contact) => ({
-        id: contact._id,
-        user: contact.username,
-        done: false,
-      }));
-      setContactList([...contactList, ...contacts]);
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on('contacts', async () => {
+  //     const contacts = Array.from(await loadContacts()).map((contact) => ({
+  //       id: contact._id,
+  //       user: contact.username,
+  //       done: false,
+  //     }));
+  //     setContactList([...contactList, ...contacts]);
+  //   });
+  // }, []);
 
   // SIDEBAR USECALLBACK ONEFFECT
   const onContactInputChange = useCallback((event) => {
