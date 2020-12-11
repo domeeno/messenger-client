@@ -102,7 +102,7 @@ function Profile() {
           </div>
           <input onChange={onBioInputChange} defaultValue={user.bio} className="contact-input-box"></input>
         </div>
-        <Button type="submit" className="chat-send-button" onClick={updateUserRequest}>Save</Button>
+        <Button type="submit" className="chat-send-button" style={{ marginRight: '30px', width: '100px' }} onClick={updateUserRequest}>Save</Button>
         <a className="chat-send-button" href="/change-password">Change Password</a>
       </div>
     </div>
