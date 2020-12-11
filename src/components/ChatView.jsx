@@ -10,6 +10,7 @@ import socketIOClient from 'socket.io-client';
 import api from '../api/api.instance';
 
 const ENDPOINT = 'http://http://7fcf522f3a08.ngrok.io';
+
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
 const token = localStorage.getItem('authToken');

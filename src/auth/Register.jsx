@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { CheckCircleFill } from 'react-bootstrap-icons';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { useAuth } from './auth.context';
@@ -13,10 +14,15 @@ const Register = ({ history }) => {
     email: '',
     password: '',
   });
+  const [recaptchaComplete, setRecaptchaComplete] = useState(false);
 
   const { username, email, password } = formData;
 
   const { setAuthToken } = useAuth();
+
+  const handleRecaptcha = (status) => {
+    setRecaptchaComplete(status);
+  };
 
   const passwordIsValid = validatePassword(password);
 
@@ -69,8 +75,13 @@ const Register = ({ history }) => {
             Nice password
           </div>
           )}
-          <button type="submit" disabled={!passwordIsValid} className="btn btn-primary btn-block">Submit</button>
+          <button type="submit" disabled={!passwordIsValid || !recaptchaComplete} className="btn btn-primary btn-block">Submit</button>
           <a href="/login">Have an account? Login here</a>
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+            size="normal"
+            onChange={handleRecaptcha}
+          />
         </form>
       </div>
     </div>
