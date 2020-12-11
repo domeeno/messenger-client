@@ -25,8 +25,17 @@
 }
 
 .contacts-header {
+    font-size: 32px;
     padding: 20px 12px 12px 20px;
+    color: #FFFFFF;
+    text-decoration: none;
 }
+
+.contacts-header:hover {
+  color: goldenrod;
+  text-decoration: none;
+}
+
 
 .add-contact-form {
     padding-top: 10px;
@@ -97,6 +106,10 @@
 
 .username-display {
     color: goldenrod
+}
+
+.you-display {
+  color: #a85ff1;
 }
 
 .separator {

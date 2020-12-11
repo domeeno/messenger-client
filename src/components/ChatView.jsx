@@ -41,6 +41,13 @@ const getMessageListFromChat = (chatId) => (
   })
 );
 
+const getContactList = () => (
+  api.get(`${ENDPOINT}/chats/`, {}).then((response) => {
+    console.log(response.data);
+    return response.data;
+  })
+);
+
 function getUserToBeAdded(userToAdd) {
   const receivedUser = sendAddContactRequest(userToAdd);
   console.log(`I actually do stuff${userToAdd}`);
@@ -50,6 +57,11 @@ function getUserToBeAdded(userToAdd) {
 async function loadMessages(chatId) {
   const newMessageList = await getMessageListFromChat(chatId);
   return newMessageList;
+}
+
+async function loadContacts() {
+  const loadedContactList = await getContactList();
+  return loadedContactList;
 }
 
 function prettifyTime(time) {
@@ -95,6 +107,17 @@ function ChatView() {
     });
   }, []);
 
+  useEffect(() => {
+    socket.on('contacts', async () => {
+      const contacts = Array.from(await loadContacts()).map((contact) => ({
+        id: contact._id,
+        user: contact.username,
+        done: false,
+      }));
+      setContactList([...contactList, ...contacts]);
+    });
+  }, []);
+
   // SIDEBAR USECALLBACK ONEFFECT
   const onContactInputChange = useCallback((event) => {
     setContactInputBox(event.target.value);
@@ -103,7 +126,7 @@ function ChatView() {
   const onContactInputSubmit = useCallback((event) => {
     event.preventDefault();
 
-    const userToAdd = event.target.elements.userToAdd.value;
+    const userToAdd = String(event.target.elements.userToAdd.value);
 
     const receivedUser = getUserToBeAdded(userToAdd);
 
@@ -167,7 +190,7 @@ function ChatView() {
   const Submit = useCallback((event) => {
     event.preventDefault();
 
-    const msg = event.target.elements.msg.value;
+    const msg = String(event.target.elements.msg.value);
 
     // TODO send chatId with message
     const body = { msg, token, chatId };
@@ -180,11 +203,15 @@ function ChatView() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listOfMessages, messageTextBox]);
 
+  function fromMe(user) {
+    return user === username;
+  }
+
   return (
     <div className="chat-container d-flex">
       {/* SIDE */}
       <div className="chat-sidebar">
-        <a href="/profile" className="contacts-header">{username}</a>
+        <a href="/profile" className="mt-4 contacts-header">{username}</a>
         <div id="add-contacts" className="add-contact-form">
           <form id="chat-form" onSubmit={onContactInputSubmit}>
             <input
@@ -236,7 +263,7 @@ function ChatView() {
                     {message.time}
                     {' '}
                   </span>
-                  <span className="username-display">{message.user}</span>
+                  <span className={`${fromMe(message.user) ? 'you-display' : 'username-display'}`}>{fromMe(message.user) ? 'You' : message.user}</span>
                   <span className="separator"> : </span>
                   <span className="message-display">{message.content}</span>
                 </div>
