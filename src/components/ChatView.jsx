@@ -9,7 +9,7 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
 import api from '../api/api.instance';
 
-const ENDPOINT = 'http://http://7fcf522f3a08.ngrok.io';
+const ENDPOINT = 'http://192.168.0.133:80';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
 const token = localStorage.getItem('authToken');
@@ -38,13 +38,6 @@ const getMessageListFromChat = (chatId) => (
 
 );
 
-// const getContactList = () => (
-//   api.get(`${ENDPOINT}/chats/`, {}).then((response) => {
-//     console.log(response.data);
-//     return response.data;
-//   })
-// );
-
 function getUserToBeAdded(userToAdd) {
   const receivedUser = sendAddContactRequest(userToAdd);
   return receivedUser;
@@ -54,11 +47,6 @@ async function loadMessages(chatId) {
   const newMessageList = await getMessageListFromChat(chatId);
   return newMessageList;
 }
-
-// async function loadContacts() {
-//   const loadedContactList = await getContactList();
-//   return loadedContactList;
-// }
 
 function prettifyTime(time) {
   // eslint-disable-next-line radix
@@ -71,8 +59,9 @@ function ChatView() {
   // SIDEBAR HOOKS
   const [contactBox, setContactInputBox] = useState([]);
   const [username, setUsername] = useState();
-  const [contactList, setContactList] = useState([{ id: '5fd39bfe1d602517326143ed', username: 'momo' },
-    { id: '5fd39c5e58c64b18909f7411', username: 'dianusca' }, { id: '5fd39ca758c64b18909f7412', username: 'holly_molly' }]);
+  const [contactList, setContactList] = useState([{ id: '5fd41610da87e4001271e276', username: 'diana' },
+    { id: '5fd41676da87e4001271e279', username: 'Dominic' }, { id: '5fd41634da87e4001271e277', username: 'IulianaT' }, { id: '5fd41656da87e4001271e278', username: 'afishr' },
+    { id: '5fd415375e8cd00012c43a29', username: 'John_Doe' }]);
   // MESSAGE HOOKS
   const [messageTextBox, setMessageTextBox] = useState('');
   const [listOfMessages, setListOfMessages] = useState([]);
@@ -101,17 +90,6 @@ function ChatView() {
       setListOfMessages([...listOfMessages, ...messages]);
     });
   }, []);
-
-  // useEffect(() => {
-  //   socket.on('contacts', async () => {
-  //     const contacts = Array.from(await loadContacts()).map((contact) => ({
-  //       id: contact._id,
-  //       user: contact.username,
-  //       done: false,
-  //     }));
-  //     setContactList([...contactList, ...contacts]);
-  //   });
-  // }, []);
 
   // SIDEBAR USECALLBACK ONEFFECT
   const onContactInputChange = useCallback((event) => {
@@ -172,7 +150,9 @@ function ChatView() {
 
   const onMessageInputChange = useCallback((event) => {
     // console.log(event.target.value);
-    setMessageTextBox(String(event.target.value));
+    if (String(event.target.value.length) <= 2048) {
+      setMessageTextBox(String(event.target.value));
+    }
   }, []);
 
   const Submit = useCallback((event) => {
