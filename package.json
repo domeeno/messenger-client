@@ -31,7 +31,7 @@
     "eslint-plugin-react-hooks": "^4.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_RECAPTCHA_KEY=6LeerAIaAAAAAAwz4ztyrTciBPYq7w1XgX29p6EY HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

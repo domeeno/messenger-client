@@ -9,7 +9,7 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import socketIOClient from 'socket.io-client';
 import api from '../api/api.instance';
 
-const ENDPOINT = 'http://192.168.0.133:80';
+const ENDPOINT = 'https://localhost';
 const socket = socketIOClient(ENDPOINT, { transports: ['websocket'] });
 
 const token = localStorage.getItem('authToken');

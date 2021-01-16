@@ -6,7 +6,6 @@ import Login from './auth/Login';
 import Profile from './components/Profile';
 import ChangePassword from './auth/ChangePassword';
 import { AuthContext } from './auth/auth.context';
-import RouteGuard from './auth/RouteGuard';
 
 const App = () => {
   const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
@@ -25,7 +24,7 @@ const App = () => {
             <Route path="/change-password" component={ChangePassword} />
             <Route path="/login" component={Login} />
             <Route path="/profile" component={Profile} />
-            <RouteGuard exact path="/" component={ChatView} />
+            <Route exact path="/" component={ChatView} />
           </Switch>
         </div>
       </BrowserRouter>
